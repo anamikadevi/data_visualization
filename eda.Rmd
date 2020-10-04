@@ -19,8 +19,8 @@ options(
   ggplot2.continuous.fill = "virirdis"
 )
 
-scale_colour_discrete = scale_color_viridis_d()
-scale_fill_discrete = scale_fill_viridis_d()
+scale_colour_discrete = scale_color_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 ## Load weather data
@@ -127,16 +127,55 @@ weather_df %>%
 ```
 
 
+## General Summaries
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(
+    mean_tmax = mean(tmax, na.rm = TRUE), 
+    mean_prcp = mean(prcp, na.rm = TRUE), 
+    median_tmin = median(tmin, na.rm = TRUE)
+  )
+```
 
 
+Dataframe to plot
 
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(
+    mean_tmax = mean(tmax, na.rm = TRUE), 
+    mean_prcp = mean(prcp, na.rm = TRUE), 
+    median_tmin = median(tmin, na.rm = TRUE)
+  ) %>% 
+  ggplot(aes(x = month, y = mean_tmax, color = name)) +
+  geom_point() +
+  geom_line()
+```
 
+Summarize many columns in the same way
 
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(across(prcp:tmin, mean)
+  )
+```
 
+sometimes easier to read in a different format
 
-
-
-
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(mean_tmax = mean(tmax)) %>%  
+  pivot_wider(
+    names_from = name,
+    values_from = mean_tmax
+  ) %>% 
+  knitr::kable(digits = 1)
+```
 
 
 
