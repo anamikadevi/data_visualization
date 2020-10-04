@@ -378,3 +378,53 @@ tmax_tmin_plot / (prcp_dens_p + tmax_date_p)
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 ![](data_visualization_2_files/figure-gfm/unnamed-chunk-13-4.png)<!-- -->
+
+## Data Manipulation
+
+Control Factors.
+
+``` r
+weather_df %>% 
+  mutate(
+    name = factor(name), 
+    name = forcats::fct_relevel(name, c("Waikiki_HA"))
+  ) %>% 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_violin(alpha = .5)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+![](data_visualization_2_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+Densities for tmin and tmac simultaneously
+
+``` r
+weather_df %>% 
+  filter(name == "CentralPark_NY") %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) %>% 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = .5)
+```
+
+![](data_visualization_2_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+``` r
+weather_df %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) %>% 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = .5) +
+  facet_grid(. ~ name)
+```
+
+    ## Warning: Removed 18 rows containing non-finite values (stat_density).
+
+![](data_visualization_2_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
