@@ -1,5 +1,5 @@
 ---
-title: "EDA"
+title: "Exploratory Data Analysis"
 output: github_document
 ---
 
@@ -23,7 +23,7 @@ scale_colour_discrete = scale_color_viridis_d()
 scale_fill_discrete = scale_fill_viridis_d()
 ```
 
-## Load Weather data
+## Load weather data
 
 ```{r}
 weather_df = 
@@ -53,6 +53,48 @@ weather_df %>%
   group_by(name, month) %>% 
   ungroup()
 ```
+
+## Counting
+
+Count observations
+
+```{r}
+weather_df %>% 
+  group_by(month) %>% 
+  summarize(n_obs = n())
+```
+
+```{r}
+weather_df %>% 
+  group_by(name) %>% 
+  summarize(n_obs = n())
+```
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  summarize(n_obs = n())
+```
+
+#### `count()`
+
+```{r}
+weather_df %>% 
+  count(month, name = "n_obs")
+```
+
+**Never** use base R's `table`
+
+Other helpful conters
+
+```{r}
+weather_df %>% 
+  group_by(month) %>% 
+  summarize(
+    n_obs = n(),
+    n_days = n_distinct(date))
+```
+
 
 
 
