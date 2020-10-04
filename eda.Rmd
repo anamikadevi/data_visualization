@@ -177,6 +177,61 @@ weather_df %>%
   knitr::kable(digits = 1)
 ```
 
+## `group_by` and `mutate`
+
+```{r}
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(
+    mean_tmax = mean(tmax, na.rm = TRUE), 
+    centered_tmax = tmax - mean_tmax
+  ) %>% 
+  ggplot(aes(x = date, y = centered_tmax, color = name)) +
+  geom_point()
+```
+
+mutate defines a new variable by group (i.e. mean tmax for the entire year)
+
+
+## Window functions
+
+#### Ranking
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>%
+  mutate(temp_rank = min_rank(tmax)) %>% 
+  filter(temp_rank == 1)
+```
+
+min_rank -- lowest values
+filter by lowest values by month
+
+```{r}
+weather_df %>% 
+  group_by(name, month) %>%
+  mutate(temp_rank = min_rank(desc(tmax)))
+```
+
+reverses orders
+
+#### Lag
+
+```{r}
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(lag_temp = lag(tmax, 5))
+```
+
+```{r}
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(temp_change = tmax - lag(tmax)) %>% 
+  summarize(
+    temp_change_max = max(temp_change, na.rm = TRUE), 
+    temp_change_sd = sd(temp_change, na.rm = TRUE)
+  )
+```
 
 
 
